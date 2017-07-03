@@ -23,7 +23,6 @@ parser.add_argument('--critical', help='Критическая температ�
 parser.add_argument('--list', '-l', action='store_true', help='Список доступных сенсоров')
 args = parser.parse_args()
 
-
 HWMON_PATH = '/sys/class/hwmon'
 RETURN_CODE = {"OK": 0,
                "Warning": 1,
@@ -55,10 +54,10 @@ class Module:
                 s_list.add(f_list.split('_')[0])
         for sens in sorted(s_list):
             self.sensor.append(Sensor(sens,
-                                      read_sensor(os.path.join(self.path, sens+'_input')),
+                                      read_sensor(os.path.join(self.path, sens + '_input')),
                                       sensor_name=read_sensor(os.path.join(self.path, sens + '_label')),
-                                      t_max=read_sensor(os.path.join(self.path, sens+'_max')),
-                                      t_crit=read_sensor(os.path.join(self.path, sens+'_crit'))
+                                      t_max=read_sensor(os.path.join(self.path, sens + '_max')),
+                                      t_crit=read_sensor(os.path.join(self.path, sens + '_crit'))
                                       ))
 
     def show(self):
@@ -77,15 +76,15 @@ class Sensor:
             self.name = self.raw_name
         else:
             self.name = sensor_name
-        self.current = float(current)/1000
+        self.current = float(current) / 1000
         if t_max is not None:
-            self.t_max = float(t_max)/1000
+            self.t_max = float(t_max) / 1000
         else:
-            self.t_max = 80
+            self.t_max = float(80)
         if t_crit is not None:
-            self.t_crit = float(t_crit)/1000
+            self.t_crit = float(t_crit) / 1000
         else:
-            self.t_crit = 100
+            self.t_crit = float(100)
 
     def check(self):
         if args.warning:
@@ -104,6 +103,7 @@ class Sensor:
 
     def __repr__(self):
         return "{0}".format(self.__dict__)
+
 
 modules = []
 for hwmon in os.listdir(HWMON_PATH):
@@ -138,11 +138,11 @@ if args.module and args.sub:
 
     if c_sensor:
         R = c_sensor.check()
-        print("Temp {0}: {1}={2}°C;{3};{4}".format(c_sensor.name,
-                                                   R,
-                                                   c_sensor.current,
-                                                   c_sensor.t_max,
-                                                   c_sensor.t_crit))
+        print("{1} {0} {2}°C = {2}°C;{3};{4}".format(c_sensor.name,
+                                                     R,
+                                                     c_sensor.current,
+                                                     c_sensor.t_max,
+                                                     c_sensor.t_crit))
         exit(RETURN_CODE[R])
 
 else:
