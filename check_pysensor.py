@@ -138,11 +138,11 @@ if args.module and args.sub:
 
     if c_sensor:
         R = c_sensor.check()
-        print("{1} {0} {2}°C = {2}°C;{3};{4}".format(c_sensor.name,
-                                                     R,
-                                                     c_sensor.current,
-                                                     c_sensor.t_max,
-                                                     c_sensor.t_crit))
+        print("{1} {0}: {2}C | {0}={2};{3};{4}".format(c_sensor.name,
+                                                       R,
+                                                       c_sensor.current,
+                                                       c_sensor.t_max,
+                                                       c_sensor.t_crit))
         exit(RETURN_CODE[R])
 
 else:
